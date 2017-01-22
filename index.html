@@ -1,108 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Canvas</title>
-    <style media="screen">
-      canvas {border: 1px solid black};
-    </style>
+<head>
+  <meta charset="utf-8">
+  <title>Canvas</title>
+  <link rel="stylesheet" type="text/css" href="viz.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+  <script type="text/javascript" src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
+  <script type="text/javascript" src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>
+  <script type="text/javascript" src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
+  <script src="script.js"></script>
+</head>
 
-    <link href="main.css" rel="stylesheet" type="text/css">
-     <link rel="stylesheet" href="animate.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
-    <script type="text/javascript" src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
-    <script type="text/javascript" src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
-    <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>
-    <script type="text/javascript" src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
-    <script src="script.js"></script>
+<body onload="init(); startColorChange();loadSound();" id="bgcolor">
 
-  </head>
-
-  <body onload="loadSound();">
-    <div class="container">
-  <!--- Scripts for canvas
-    <h1>Canvas</h1>
-
-
-    <!- Canvas where the game will be played ->
-    <canvas id="canvas" width="960" height="400"></canvas>
-
-
-    <script>
-
-        //the shape of the object
-        var x = 10;
-        var y= 10;
-        var w = 20;
-        var h = 30;
-        //the speed of the object
-
-        var speed = 5;
-        //used to created a visual of the canvas
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext("2d");
-
-        //a decision on the bounce of the object from wall to wall
-        var update= function () {
-          if (x >= 470){
-            x=470;
-            speed = -speed;
-          }
-          else if (x <= 10){
-            x= 10;
-            speed = -speed;
-          }
-          x = x + speed;
-        };
-
-        //color of the rectangle
-        var draw = function () {
-          ctx.clearRect(0,0,500,300);
-          ctx.fillStyle = "rgb(200,0,100)";
-          ctx.fillRect(x,y,w,h);
-        };
-
-        var step = function (){
-
-        update();
-        draw();
-        window.requestAnimationFrame(step);
-      };
-      step();
-
-  </script>  -->
-
-   <h1 class="animated" onclick="playSound();" class="playSound">Play Sound</h1>
-<!-- changing the background -->
-   <script type="text/javascript">
-
-
-jQuery(function ($) {
-    function changeColor(selector, colors, time) {
-        /* Params:
-         * selector: string,
-         * colors: array of color strings,
-         * every: integer (in mili-seconds)
-         */
-        var curCol = 0,
-            timer = setInterval(function () {
-                if (curCol === colors.length) curCol = 0;
-                $(selector).css("background-color", colors[curCol]);
-                curCol++;
-            }, time);
-    }
-    $(window).load(function () {
-        changeColor(".container", ["green", "yellow", "blue", "red"], 3000);
-    });
-});
-
-    </script>
+  <audio autoplay loop>
+      <source src="Assets/TheForest.m4a">
+</audio>
+  <canvas id="testCanvas" width="960" height="600"></canvas>
 
 
 
+  <script>
+  var canvas;
+  var stage;
+  var tweens;
+  var activeCount;
+  var circleCount = 25;
+  var text;
 
-</div>
-  </body>
+  function init() {
 
+    canvas = document.getElementById("testCanvas");
+    stage = new createjs.Stage(canvas);
+    stage.enableDOMEvents(true);
+    tweens = [];
+    stage.enableMouseOver(10);
+    createjs.Touch.enable(stage);
+
+    for (var i = 0; i < circleCount; i++) {
+  // draw the circle, and put it on stage:
+  var circle = new createjs.Shape();
+  circle.graphics.setStrokeStyle(15);
+  circle.graphics.beginStroke("#113355");
+  circle.graphics.drawCircle(0, 0, (i + 1) * 4);
+  circle.alpha = 1 - i * 0.02;
+  circle.x = Math.random() * 550;
+  circle.y = Math.random() * 400;
+  circle.compositeOperation = "lighter";
+
+  var tween = createjs.Tween.get(circle).to({x: 275, y: 200}, (0.5 + i * 0.04) * 1500, createjs.Ease.bounceOut).call(tweenComplete);
+  tweens.push({tween: tween, ref: circle});
+  stage.addChild(circle);
+}
+
+activeCount = circleCount;
+stage.addEventListener("stagemouseup", handleMouseUp);
+
+
+text = new createjs.Text("Click To Move Circle", "36px Arial", "black");
+text.x = 350;
+text.y = 200;
+stage.addChild(text);
+
+createjs.Ticker.addEventListener("tick", tick);
+}
+function handleMouseUp(event) {
+  if (text) {
+    stage.removeChild(text);
+    text = null;
+  }
+  for (var i = 0; i < circleCount; i++) {
+    var ref = tweens[i].ref;
+    var tween = tweens[i].tween;
+    createjs.Tween.get(ref, {override: true}).to({x: stage.mouseX, y: stage.mouseY}, (0.5 + i * 0.04) * 1500, createjs.Ease.bounceOut).call(tweenComplete);
+  }
+  activeCount = circleCount;
+}
+
+function tweenComplete() {
+  activeCount--;
+}
+
+function tick(event) {
+  if (activeCount) {
+    stage.update(event);
+  }
+}
+
+</script>
+<!-- script to change background color -->
+<script type="text/javascript" src="colors.js"></script>
+
+
+</body>
 </html>

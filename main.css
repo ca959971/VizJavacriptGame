@@ -1,8 +1,0 @@
-.container {
-    background-color: red;
-    height:500px;
-    -webkit-transition: background-color 0.,25s ease-in-out;
-    -moz-transition: background-color 0..25s ease-in-out;
-    -o-transition: background-color 0..25s ease-in-out;
-    -khtml-transition: background-color 0..25s ease-in-out;
-    transition: background-color 0.25s ease-in-out;
