@@ -6,6 +6,10 @@
     <style media="screen">
       canvas {border: 1px solid black};
     </style>
+
+    <link href="main.css" rel="stylesheet" type="text/css">
+     <link rel="stylesheet" href="animate.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script type="text/javascript" src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
     <script type="text/javascript" src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
@@ -14,11 +18,14 @@
     <script src="script.js"></script>
 
   </head>
-  <body onload="loadSound();">
-    <h1>Canvas</h1>
-</div>
 
-    <!-- Canvas where the game will be played -->
+  <body onload="loadSound();">
+    <div class="container">
+  <!--- Scripts for canvas
+    <h1>Canvas</h1>
+
+
+    <!- Canvas where the game will be played ->
     <canvas id="canvas" width="960" height="400"></canvas>
 
 
@@ -64,10 +71,38 @@
       };
       step();
 
-  </script>
+  </script>  -->
 
-   <button onclick="playSound();" class="playSound">Play Sound</button>
+   <h1 class="animated" onclick="playSound();" class="playSound">Play Sound</h1>
+<!-- changing the background -->
+   <script type="text/javascript">
 
 
+jQuery(function ($) {
+    function changeColor(selector, colors, time) {
+        /* Params:
+         * selector: string,
+         * colors: array of color strings,
+         * every: integer (in mili-seconds)
+         */
+        var curCol = 0,
+            timer = setInterval(function () {
+                if (curCol === colors.length) curCol = 0;
+                $(selector).css("background-color", colors[curCol]);
+                curCol++;
+            }, time);
+    }
+    $(window).load(function () {
+        changeColor(".container", ["green", "yellow", "blue", "red"], 3000);
+    });
+});
+
+    </script>
+
+
+
+
+</div>
   </body>
+
 </html>
