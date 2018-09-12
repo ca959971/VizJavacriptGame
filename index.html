@@ -22,12 +22,12 @@
 
 
   <script>
-  var canvas;
-  var stage;
-  var tweens;
-  var activeCount;
-  var circleCount = 25;
-  var text;
+  let canvas;
+  let stage;
+  let tweens;
+  let activeCount;
+  let circleCount = 25;
+  let text;
 
   function init() {
 
@@ -40,7 +40,7 @@
 
     for (var i = 0; i < circleCount; i++) {
   // draw the circle, and put it on stage:
-  var circle = new createjs.Shape();
+  let circle = new createjs.Shape();
   circle.graphics.setStrokeStyle(15);
   circle.graphics.beginStroke("#113355");
   circle.graphics.drawCircle(0, 0, (i + 1) * 4);
@@ -49,7 +49,7 @@
   circle.y = Math.random() * 400;
   circle.compositeOperation = "lighter";
 
-  var tween = createjs.Tween.get(circle).to({x: 275, y: 200}, (0.5 + i * 0.04) * 1500, createjs.Ease.bounceOut).call(tweenComplete);
+  let tween = createjs.Tween.get(circle).to({x: 275, y: 200}, (0.5 + i * 0.04) * 1500, createjs.Ease.bounceOut).call(tweenComplete);
   tweens.push({tween: tween, ref: circle});
   stage.addChild(circle);
 }
@@ -71,8 +71,8 @@ function handleMouseUp(event) {
     text = null;
   }
   for (var i = 0; i < circleCount; i++) {
-    var ref = tweens[i].ref;
-    var tween = tweens[i].tween;
+    let ref = tweens[i].ref;
+    let tween = tweens[i].tween;
     createjs.Tween.get(ref, {override: true}).to({x: stage.mouseX, y: stage.mouseY}, (0.5 + i * 0.04) * 1500, createjs.Ease.bounceOut).call(tweenComplete);
   }
   activeCount = circleCount;
