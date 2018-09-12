@@ -1,4 +1,4 @@
-var bgColors = ["#5EA6A7", "#8EBBAB", "#BDD3AE", "#456877", "#FCF2C6"];
+let bgColors = ["#5EA6A7", "#8EBBAB", "#BDD3AE", "#456877", "#FCF2C6"];
 
 //var bgColors = ["#161F27", "#625F5A", "#3F3943", "#C5BCAF", "#A08062" ];
 
